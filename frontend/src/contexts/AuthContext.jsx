@@ -14,72 +14,69 @@ export const useAuth = () => {
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) {
-      fetchProfile();
-    } else {
-      setLoading(false);
+      api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+      setUser({ token });
     }
+    setLoading(false);
   }, []);
-
-  const fetchProfile = async () => {
-    try {
-      const response = await api.get('/auth/profile');
-      setUser(response.data);
-    } catch (error) {
-      console.error('Profile fetch error:', error);
-      localStorage.removeItem('token');
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const login = async (email, password) => {
     try {
-      setError(null);
       const response = await api.post('/auth/login', { email, password });
-      const { token, user } = response.data;
+      const { token, userId } = response.data;
+      
       localStorage.setItem('token', token);
-      setUser(user);
+      api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+      setUser({ token, userId });
+      
       return { success: true };
     } catch (error) {
-      const message = error.response?.data?.error || 'Login failed';
-      setError(message);
-      return { success: false, error: message };
+      return { 
+        success: false, 
+        error: error.response?.data?.error || 'Login failed' 
+      };
     }
   };
 
   const register = async (email, password) => {
     try {
-      setError(null);
       const response = await api.post('/auth/register', { email, password });
-      const { token, user } = response.data;
+      const { token, userId } = response.data;
+      
       localStorage.setItem('token', token);
-      setUser(user);
+      api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+      setUser({ token, userId });
+      
       return { success: true };
     } catch (error) {
-      const message = error.response?.data?.error || 'Registration failed';
-      setError(message);
-      return { success: false, error: message };
+      return { 
+        success: false, 
+        error: error.response?.data?.error || 'Registration failed' 
+      };
     }
   };
 
   const logout = () => {
     localStorage.removeItem('token');
+    delete api.defaults.headers.common['Authorization'];
     setUser(null);
   };
 
   const value = {
     user,
-    loading,
-    error,
     login,
     register,
-    logout
+    logout,
+    loading
   };
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={value}>
+      {children}
+    </AuthContext.Provider>
+  );
 };

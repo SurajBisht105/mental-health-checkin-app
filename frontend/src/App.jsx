@@ -1,37 +1,34 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { AuthProvider } from './context/AuthContext';
-import Header from './components/Layout/Header';
-import PrivateRoute from './components/Layout/PrivateRoute';
-import Login from './components/Auth/Login';
-import Register from './components/Auth/Register';
-import CheckinForm from './components/CheckIn/CheckinForm';
-import CheckinHistory from './components/CheckIn/CheckinHistory';
+import { AuthProvider } from './contexts/AuthContext';
+import Layout from './components/layout/Layout';
+import Login from './components/auth/Login';
+import Register from './components/auth/Register';
+import CheckinForm from './components/checkin/CheckinForm';
+import CheckinHistory from './components/checkin/CheckinHistory';
+import ProtectedRoute from './components/common/ProtectedRoute';
 
 function App() {
   return (
     <AuthProvider>
       <Router>
-        <div className="min-h-screen bg-gray-50">
-          <Header />
-          <main className="container mx-auto px-4 py-8">
-            <Routes>
-              <Route path="/login" element={<Login />} />
-              <Route path="/register" element={<Register />} />
-              <Route path="/checkin" element={
-                <PrivateRoute>
-                  <CheckinForm />
-                </PrivateRoute>
-              } />
-              <Route path="/history" element={
-                <PrivateRoute>
-                  <CheckinHistory />
-                </PrivateRoute>
-              } />
-              <Route path="/" element={<Navigate to="/checkin" />} />
-            </Routes>
-          </main>
-        </div>
+        <Layout>
+          <Routes>
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/" element={
+              <ProtectedRoute>
+                <CheckinForm />
+              </ProtectedRoute>
+            } />
+            <Route path="/history" element={
+              <ProtectedRoute>
+                <CheckinHistory />
+              </ProtectedRoute>
+            } />
+            <Route path="*" element={<Navigate to="/" />} />
+          </Routes>
+        </Layout>
       </Router>
     </AuthProvider>
   );

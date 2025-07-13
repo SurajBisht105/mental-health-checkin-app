@@ -7,12 +7,9 @@ const api = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
-  withCredentials: true // Important for CORS with credentials
 });
 
-// Rest of the code remains the same...
-
-// Add auth token to requests
+// Add token to requests if it exists
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('token');

@@ -1,117 +1,41 @@
 const Checkin = require('../models/Checkin');
-const { validationResult } = require('express-validator');
 const { encryptData, decryptData } = require('../utils/encryption');
 
-exports.createCheckin = async (req, res) => {
+const createCheckin = async (req, res) => {
   try {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
-
     const { moodRating, stressLevel, journalEntry } = req.body;
-
-    // Encrypt sensitive data
-    const encryptedJournalEntry = encryptData(journalEntry);
-
-    // Create checkin
+    
+    const encryptedJournal = encryptData(journalEntry);
+    
     const checkin = new Checkin({
       userId: req.userId,
       moodRating,
       stressLevel,
-      journalEntry: encryptedJournalEntry
+      journalEntry: encryptedJournal
     });
 
     await checkin.save();
-
-    res.status(201).json({
-      message: 'Check-in saved successfully',
-      checkin: {
-        id: checkin._id,
-        date: checkin.date,
-        moodRating: checkin.moodRating,
-        stressLevel: checkin.stressLevel
-      }
-    });
+    res.status(201).json({ message: 'Check-in saved successfully' });
   } catch (error) {
-    console.error('Checkin creation error:', error);
-    res.status(500).json({ error: 'Server error' });
+    res.status(500).json({ error: 'Error saving check-in' });
   }
 };
 
-exports.getCheckins = async (req, res) => {
+const getCheckins = async (req, res) => {
   try {
-    const { page = 1, limit = 10 } = req.query;
-    const skip = (page - 1) * limit;
-
     const checkins = await Checkin.find({ userId: req.userId })
       .sort({ date: -1 })
-      .limit(limit * 1)
-      .skip(skip);
+      .limit(30);
 
-    // Decrypt journal entries
     const decryptedCheckins = checkins.map(checkin => ({
-      id: checkin._id,
-      date: checkin.date,
-      moodRating: checkin.moodRating,
-      stressLevel: checkin.stressLevel,
-      journalEntry: decryptData(checkin.journalEntry),
-      createdAt: checkin.createdAt
+      ...checkin.toObject(),
+      journalEntry: decryptData(checkin.journalEntry)
     }));
 
-    const total = await Checkin.countDocuments({ userId: req.userId });
-
-    res.json({
-      checkins: decryptedCheckins,
-      currentPage: page,
-      totalPages: Math.ceil(total / limit),
-      totalCheckins: total
-    });
+    res.json(decryptedCheckins);
   } catch (error) {
-    console.error('Get checkins error:', error);
-    res.status(500).json({ error: 'Server error' });
+    res.status(500).json({ error: 'Error fetching check-ins' });
   }
 };
 
-exports.getCheckinById = async (req, res) => {
-  try {
-    const checkin = await Checkin.findOne({
-      _id: req.params.id,
-      userId: req.userId
-    });
-
-    if (!checkin) {
-      return res.status(404).json({ error: 'Check-in not found' });
-    }
-
-    res.json({
-      id: checkin._id,
-      date: checkin.date,
-      moodRating: checkin.moodRating,
-      stressLevel: checkin.stressLevel,
-      journalEntry: decryptData(checkin.journalEntry),
-      createdAt: checkin.createdAt
-    });
-  } catch (error) {
-    console.error('Get checkin error:', error);
-    res.status(500).json({ error: 'Server error' });
-  }
-};
-
-exports.deleteCheckin = async (req, res) => {
-  try {
-    const checkin = await Checkin.findOneAndDelete({
-      _id: req.params.id,
-      userId: req.userId
-    });
-
-    if (!checkin) {
-      return res.status(404).json({ error: 'Check-in not found' });
-    }
-
-    res.json({ message: 'Check-in deleted successfully' });
-  } catch (error) {
-    console.error('Delete checkin error:', error);
-    res.status(500).json({ error: 'Server error' });
-  }
-};
+module.exports = { createCheckin, getCheckins };

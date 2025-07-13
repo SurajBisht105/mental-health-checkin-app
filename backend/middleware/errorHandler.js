@@ -3,7 +3,7 @@ const errorHandler = (err, req, res, next) => {
 
   if (err.name === 'ValidationError') {
     const errors = Object.values(err.errors).map(e => e.message);
-    return res.status(400).json({ error: 'Validation Error', details: errors });
+    return res.status(400).json({ error: errors.join(', ') });
   }
 
   if (err.name === 'CastError') {
@@ -15,7 +15,7 @@ const errorHandler = (err, req, res, next) => {
   }
 
   res.status(err.status || 500).json({
-    error: err.message || 'Internal Server Error'
+    error: err.message || 'Internal server error'
   });
 };
 
