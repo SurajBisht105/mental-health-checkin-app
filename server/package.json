@@ -2,10 +2,10 @@
   "name": "mental-health-backend",
   "version": "1.0.0",
   "description": "Mental Health Check-in API",
-  "main": "server.js",
+  "main": "index.js",
   "scripts": {
-    "start": "node server.js",
-    "dev": "nodemon server.js"
+    "start": "node index.js",
+    "dev": "nodemon index.js"
   },
   "dependencies": {
     "express": "^4.18.2",
@@ -19,7 +19,7 @@
     "express-validator": "^7.0.1",
     "crypto-js": "^4.1.1"
   },
-  "devDependencies": {
-    "nodemon": "^3.0.1"
+  "engines": {
+    "node": "18.x"
   }
 }
