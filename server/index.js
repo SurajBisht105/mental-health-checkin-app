@@ -5,9 +5,9 @@ const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 require('dotenv').config();
 
-const authRoutes = require('../server/routes/authRoutes');
-const checkinRoutes = require('../server/routes/checkinRoutes');
-const errorHandler = require('../server/middleware/errorHandler');
+const authRoutes = require('./routes/authRoutes');
+const checkinRoutes = require('./routes/checkinRoutes');
+const errorHandler = require('./middleware/errorHandler');
 
 const app = express();
 
@@ -21,9 +21,9 @@ const limiter = rateLimit({
 });
 app.use('/api/', limiter);
 
-// CORS configuration
+// CORS - Allow all origins during setup (we'll restrict later)
 app.use(cors({
-  origin: process.env.CLIENT_URL || '*',
+  origin: true,
   credentials: true
 }));
 
@@ -31,12 +31,28 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Routes
+// Test route
+app.get('/', (req, res) => {
+  res.json({ 
+    message: 'Mental Health API is running!',
+    endpoints: {
+      auth: '/api/auth',
+      checkins: '/api/checkins'
+    }
+  });
+});
+
+// API routes
 app.use('/api/auth', authRoutes);
 app.use('/api/checkins', checkinRoutes);
 
 // Error handling
 app.use(errorHandler);
+
+// 404 handler
+app.use((req, res) => {
+  res.status(404).json({ error: 'Route not found' });
+});
 
 // Database connection
 if (process.env.MONGODB_URI) {
@@ -45,13 +61,5 @@ if (process.env.MONGODB_URI) {
     .catch(err => console.error('MongoDB connection error:', err));
 }
 
-// For Vercel
+// Export for Vercel
 module.exports = app;
-
-// For local development
-if (process.env.NODE_ENV !== 'production') {
-  const PORT = process.env.PORT || 5000;
-  app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-  });
-}
