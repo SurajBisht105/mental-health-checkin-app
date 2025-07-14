@@ -21,11 +21,17 @@ const limiter = rateLimit({
 });
 app.use('/api/', limiter);
 
-// CORS - Allow all origins during setup (we'll restrict later)
-app.use(cors({
-  origin: true,
+// Update CORS configuration
+const corsOptions = {
+  origin: [
+    'http://localhost:3000',
+    'https://mental-health-frontend.vercel.app', // Your frontend URL
+    process.env.CLIENT_URL
+  ],
   credentials: true
-}));
+};
+
+app.use(cors(corsOptions));
 
 // Body parsing
 app.use(express.json());
