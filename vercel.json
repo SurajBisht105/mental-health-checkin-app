@@ -22,11 +22,5 @@
       "src": "/(.*)",
       "dest": "/client/$1"
     }
-  ],
-  "env": {
-    "MONGODB_URI": "@mongodb-uri",
-    "JWT_SECRET": "@jwt-secret",
-    "ENCRYPTION_KEY": "@encryption-key",
-    "CLIENT_URL": "@client-url"
-  }
+  ]
 }
