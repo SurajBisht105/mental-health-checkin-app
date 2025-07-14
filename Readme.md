@@ -1,31 +1,32 @@
-# Mental Health Check-in Web Application
+# Mental Health Check-in Web Application 🧠
 
-A secure, full-stack web application for daily mental health check-ins with encrypted journal entries.
+A secure, responsive full-stack web application for daily mental health check-ins.
 
 ## Features
 
-- User authentication (JWT-based)
-- Daily mental health check-ins with mood rating, stress level, and journal entries
-- Encrypted journal entries using AES encryption
-- Check-in history view
-- Responsive design with Tailwind CSS
-- Secure API with rate limiting and input validation
+- 🔐 Secure user authentication with JWT
+- 📝 Daily mental health check-ins with mood rating, stress level, and journal entries
+- 🔒 Encrypted journal entries for privacy
+- 📊 Visual mood tracking with charts
+- 📱 Fully responsive design
+- 🎨 Modern, stylish UI with Tailwind CSS
 
 ## Tech Stack
 
-- **Frontend**: React, Tailwind CSS, React Router
+- **Frontend**: React, Tailwind CSS, Recharts
 - **Backend**: Node.js, Express, MongoDB
 - **Authentication**: JWT, bcrypt
-- **Security**: Helmet, CORS, rate limiting, AES encryption
+- **Encryption**: AES encryption for journal entries
 
 ## Setup Instructions
 
 ### Prerequisites
+
 - Node.js (v14 or higher)
-- MongoDB (local or cloud instance)
+- MongoDB (local or MongoDB Atlas)
 - npm or yarn
 
-### Local Development
+### Installation
 
 1. Clone the repository:
 ```bash
