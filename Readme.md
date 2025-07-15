@@ -2,33 +2,94 @@
 
 A secure, responsive full-stack web application for daily mental health check-ins.
 
-## Features
+![Mental Health App Banner](https://via.placeholder.com/800x200?text=Mental+Health+Check-in+App)
+
+## 🚀 Live Demo
+
+- **Frontend**: [https://mental-health-checkin-app.vercel.app](https://mental-health-checkin-app.vercel.app)
+- **Backend API**: [https://mental-health-checkin-app-gxdy.vercel.app](https://mental-health-checkin-app-gxdy.vercel.app)
+
+## 📋 Features
 
 - 🔐 Secure user authentication with JWT
-- 📝 Daily mental health check-ins with mood rating, stress level, and journal entries
-- 🔒 Encrypted journal entries for privacy
-- 📊 Visual mood tracking with charts
+- 📝 Daily mental health check-ins
+- 🔒 Encrypted journal entries
+- 📊 Mood tracking visualization
 - 📱 Fully responsive design
-- 🎨 Modern, stylish UI with Tailwind CSS
+- 🎨 Modern UI with Tailwind CSS
 
-## Tech Stack
+## 🛠️ Tech Stack
 
-- **Frontend**: React, Tailwind CSS, Recharts
-- **Backend**: Node.js, Express, MongoDB
-- **Authentication**: JWT, bcrypt
-- **Encryption**: AES encryption for journal entries
+### Frontend
+- React 18
+- Tailwind CSS
+- Axios
+- Recharts
+- React Router v6
 
-## Setup Instructions
+### Backend
+- Node.js
+- Express.js
+- MongoDB with Mongoose
+- JWT Authentication
+- Bcrypt encryption
+- Express Validator
+
+## 🚀 Quick Start
 
 ### Prerequisites
-
 - Node.js (v14 or higher)
-- MongoDB (local or MongoDB Atlas)
+- MongoDB (local or Atlas)
 - npm or yarn
 
 ### Installation
 
 1. Clone the repository:
-```bash
-git clone <repository-url>
+\`\`\`bash
+git clone https://github.com/SurajBisht105/mental-health-checkin-app.git
 cd mental-health-checkin
+\`\`\`
+
+2. Install dependencies:
+\`\`\`bash
+# Install server dependencies
+cd server
+npm install
+
+# Install client dependencies
+cd ../client
+npm install
+\`\`\`
+
+3. Set up environment variables:
+
+Create `.env` in server directory:
+\`\`\`env
+PORT=5000
+MONGODB_URI=your_mongodb_connection_string
+JWT_SECRET=your_jwt_secret
+ENCRYPTION_KEY=your_32_character_key
+\`\`\`
+
+4. Run the application:
+\`\`\`bash
+# Run backend (from server directory)
+npm run dev
+
+# Run frontend (from client directory)
+npm start
+\`\`\`
+
+## 📱 Screenshots
+
+![Dashboard](https://via.placeholder.com/600x400?text=Dashboard+Screenshot)
+![Check-in Form](https://via.placeholder.com/600x400?text=Check-in+Form)
+
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 👥 Authors
+
+- Your Name - [@yourgithub](https://github.com/SurajBisht105)
