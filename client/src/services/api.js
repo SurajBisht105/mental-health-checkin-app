@@ -1,15 +1,12 @@
 import axios from 'axios';
 
-// Remove any trailing slash from the API URL
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 
-// Ensure no double slashes
 const api = axios.create({
-  baseURL: API_URL.replace(/\/+$/, ''), // Remove trailing slashes
+  baseURL: API_URL,
   headers: {
     'Content-Type': 'application/json',
   },
-  withCredentials: true
 });
 
 // Add auth token to requests
@@ -39,7 +36,7 @@ api.interceptors.response.use(
 );
 
 export const authAPI = {
-  register: (data) => api.post('/auth/register', data), // Note: no /api prefix here
+  register: (data) => api.post('/auth/register', data),
   login: (data) => api.post('/auth/login', data),
 };
 
