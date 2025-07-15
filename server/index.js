@@ -11,8 +11,11 @@ const errorHandler = require('./middleware/errorHandler');
 
 const app = express();
 
-// Security middleware
-app.use(helmet());
+// Security middleware - but disable some features for CORS
+app.use(helmet({
+  crossOriginResourcePolicy: false,
+  crossOriginOpenerPolicy: false,
+}));
 
 // Rate limiting
 const limiter = rateLimit({
@@ -21,30 +24,52 @@ const limiter = rateLimit({
 });
 app.use('/api/', limiter);
 
-// Update CORS configuration
+// CORS configuration - IMPORTANT: Add your frontend URL
 const corsOptions = {
   origin: [
     'http://localhost:3000',
-    'https://mental-health-checkin-app.vercel.app/',
-    'https://mental-health-checkin-1m1luut14-surajbisht105s-projects.vercel.app/',// Your frontend URL
-    process.env.CLIENT_URL
+    'https://mental-health-checkin-app.vercel.app',
+    'https://mental-health-checkin-app-gxdy.vercel.app'
   ],
-  credentials: true
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  optionsSuccessStatus: 204
 };
 
 app.use(cors(corsOptions));
+
+// Handle preflight
+app.options('*', cors(corsOptions));
 
 // Body parsing
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Test route
+// Root route
 app.get('/', (req, res) => {
   res.json({ 
     message: 'Mental Health API is running!',
     endpoints: {
       auth: '/api/auth',
       checkins: '/api/checkins'
+    }
+  });
+});
+
+// Add this test route
+app.get('/api', (req, res) => {
+  res.json({ 
+    message: 'API endpoint is working!',
+    availableRoutes: {
+      auth: {
+        login: 'POST /api/auth/login',
+        register: 'POST /api/auth/register'
+      },
+      checkins: {
+        create: 'POST /api/checkins',
+        getAll: 'GET /api/checkins'
+      }
     }
   });
 });
@@ -56,9 +81,19 @@ app.use('/api/checkins', checkinRoutes);
 // Error handling
 app.use(errorHandler);
 
-// 404 handler
+// 404 handler - log what route was attempted
 app.use((req, res) => {
-  res.status(404).json({ error: 'Route not found' });
+  console.log(`404 - Route not found: ${req.method} ${req.path}`);
+  res.status(404).json({ 
+    error: 'Route not found',
+    attempted: `${req.method} ${req.path}`,
+    availableEndpoints: {
+      root: 'GET /',
+      api: 'GET /api',
+      auth: 'POST /api/auth/login, POST /api/auth/register',
+      checkins: 'GET /api/checkins, POST /api/checkins'
+    }
+  });
 });
 
 // Database connection
