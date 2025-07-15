@@ -92,4 +92,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 👥 Authors
 
-- Your Name - [@yourgithub](https://github.com/SurajBisht105)
+- Your Name - [suraj bist](https://github.com/SurajBisht105)
