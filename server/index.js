@@ -25,7 +25,8 @@ app.use('/api/', limiter);
 const corsOptions = {
   origin: [
     'http://localhost:3000',
-    'https://mental-health-checkin-app.vercel.app/', // Your frontend URL
+    'https://mental-health-checkin-app.vercel.app/',
+    'https://mental-health-checkin-1m1luut14-surajbisht105s-projects.vercel.app/',// Your frontend URL
     process.env.CLIENT_URL
   ],
   credentials: true
