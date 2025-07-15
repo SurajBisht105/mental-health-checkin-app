@@ -1,12 +1,15 @@
 import axios from 'axios';
 
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+// Temporarily hardcode to test
+const API_URL = 'https://mental-health-checkin-app-gxdy.vercel.app/api';
+
+console.log('Using hardcoded API URL:', API_URL);
 
 const api = axios.create({
   baseURL: API_URL,
   headers: {
     'Content-Type': 'application/json',
-  },
+  }
 });
 
 // Add auth token to requests
